@@ -79,7 +79,7 @@ python -m tracker.cli list
 
 ```bash
 
-python cli.py start "Projeto X"
+python -m tracker.cli start --task "Nome da Tarefa"
 
 ```
 
@@ -87,14 +87,14 @@ python cli.py start "Projeto X"
 
 2. Parar um projeto
 ```bash
-python cli.py stop "Projeto X"
+python -m tracker.cli stop
 ```
 
 📌 Registra a hora de fim e calcula quanto tempo foi gasto.
 
 3. Gerar relatório
 ```bash
-python cli.py report
+python -m tracker.cli report
 ```
 
 Saída esperada:

@@ -1,13 +1,16 @@
 import sqlite3
+import os
 
-DB_NAME = "hourtracker.db"
+DB_NAME = os.path.join(os.path.dirname(__file__), "hourtracker.db")
+SCHEMA_FILE = os.path.join(os.path.dirname(__file__), "schema.sql")
 
 def get_connection():
-    conn = sqlite3.connect(DB_NAME)
-    conn.row_factory = sqlite3.Row
-    return conn
+    return sqlite3.connect(DB_NAME)
 
 def init_db():
-    with get_connection() as conn:
-        with open("schema.sql", "r", encoding="utf-8") as f:
-            conn.executescript(f.read())
+    """Cria as tabelas do banco caso ainda não existam."""
+    conn = get_connection()
+    with open(SCHEMA_FILE, "r", encoding="utf-8") as f:
+        conn.executescript(f.read())
+    conn.commit()
+    conn.close()

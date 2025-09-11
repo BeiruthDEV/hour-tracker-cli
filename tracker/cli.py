@@ -1,28 +1,26 @@
 import argparse
-from models import start_session, stop_session, report_sessions
-from db import init_db
+from tracker.models import start_session, stop_session, report_sessions
 
 def main():
-    parser = argparse.ArgumentParser(description="HourTracker - Controlador de Horas")
+    parser = argparse.ArgumentParser(description="Hour Tracker - Controle de horas com SQLite")
     subparsers = parser.add_subparsers(dest="command")
 
-    start_cmd = subparsers.add_parser("start", help="Inicia uma sessão")
-    start_cmd.add_argument("project", help="Nome do projeto")
+    # start
+    start_parser = subparsers.add_parser("start", help="Inicia uma nova sessão de trabalho")
+    start_parser.add_argument("--task", required=True, help="Nome da tarefa ou projeto")
 
-    stop_cmd = subparsers.add_parser("stop", help="Finaliza uma sessão")
-    stop_cmd.add_argument("project", help="Nome do projeto")
+    # stop
+    subparsers.add_parser("stop", help="Finaliza a última sessão em aberto")
 
-    subparsers.add_parser("report", help="Mostra relatório de horas")
+    # report
+    subparsers.add_parser("report", help="Mostra o relatório de sessões registradas")
 
     args = parser.parse_args()
 
-    # Inicializa banco caso não exista
-    init_db()
-
     if args.command == "start":
-        start_session(args.project)
+        start_session(args.task)
     elif args.command == "stop":
-        stop_session(args.project)
+        stop_session()
     elif args.command == "report":
         report_sessions()
     else:
