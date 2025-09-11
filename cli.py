@@ -1,39 +1,32 @@
 import argparse
-from tracker import storage, core
-
+from models import start_session, stop_session, report_sessions
+from db import init_db
 
 def main():
-    parser = argparse.ArgumentParser(description="HourTracker - Controle de horas em projetos")
-    subparsers = parser.add_subparsers(dest="command", required=True)
+    parser = argparse.ArgumentParser(description="HourTracker - Controlador de Horas")
+    subparsers = parser.add_subparsers(dest="command")
 
-    # Start
-    start_parser = subparsers.add_parser("start", help="Inicia contagem de horas em um projeto")
-    start_parser.add_argument("project", type=str, help="Nome do projeto")
+    start_cmd = subparsers.add_parser("start", help="Inicia uma sessão")
+    start_cmd.add_argument("project", help="Nome do projeto")
 
-    # Stop
-    stop_parser = subparsers.add_parser("stop", help="Finaliza contagem de horas em um projeto")
-    stop_parser.add_argument("project", type=str, help="Nome do projeto")
+    stop_cmd = subparsers.add_parser("stop", help="Finaliza uma sessão")
+    stop_cmd.add_argument("project", help="Nome do projeto")
 
-    # Report
-    subparsers.add_parser("report", help="Gera relatório de horas acumuladas")
+    subparsers.add_parser("report", help="Mostra relatório de horas")
 
     args = parser.parse_args()
-    storage.init_db()
+
+    # Inicializa banco caso não exista
+    init_db()
 
     if args.command == "start":
-        core.start_project(args.project)
-        print(f"Início registrado para o projeto '{args.project}'.")
-
+        start_session(args.project)
     elif args.command == "stop":
-        core.stop_project(args.project)
-        print(f"Fim registrado para o projeto '{args.project}'.")
-
+        stop_session(args.project)
     elif args.command == "report":
-        report = core.generate_report()
-        print("Horas acumuladas por projeto:")
-        for project, hours in report.items():
-            print(f" - {project}: {hours:.2f}h")
-
+        report_sessions()
+    else:
+        parser.print_help()
 
 if __name__ == "__main__":
     main()
