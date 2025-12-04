@@ -1,144 +1,89 @@
-# 🕒 HourTracker - Controlador de Horas com Python + SQLite
+# HourTracker CLI ⏱️
 
-[![Python](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/)  
-[![SQLite](https://img.shields.io/badge/sqlite-database-green.svg)](https://www.sqlite.org/index.html)  
-[![Tests](https://img.shields.io/badge/tests-pytest-success.svg)](https://docs.pytest.org/)  
-[![License](https://img.shields.io/badge/license-Pessoal-lightgrey.svg)](#-licença)
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
+![SQLite](https://img.shields.io/badge/SQLite-Persistence-green)
+![Type](https://img.shields.io/badge/Type-CLI%20Tool-orange)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
----
+## 📋 Project Overview
+O **HourTracker** é uma ferramenta de interface de linha de comando (CLI) projetada para desenvolvedores e freelancers que necessitam de um método rápido e sem fricção para registrar horas trabalhadas.
 
-## 🎯 O que é?
-O **HourTracker** é um controlador de horas simples e eficiente, feito em Python, que permite registrar o tempo gasto em diferentes projetos.  
-Com ele, você pode **iniciar, parar e consultar relatórios de horas** trabalhadas, tudo salvo em um banco de dados SQLite local.
+Diferente de ferramentas web pesadas, este projeto foca na velocidade e na persistência local, utilizando **Python** para a lógica de aplicação e **SQLite** para armazenamento confiável de dados, permitindo a geração de relatórios precisos de produtividade.
 
+## 🚀 Key Features
+* **Zero Latency Logging:** Inicie e pare contadores de tempo instantaneamente via terminal.
+* **Data Persistence:** Todos os registros são salvos em um banco de dados relacional local (SQLite), garantindo integridade mesmo se o computador reiniciar.
+* **Detailed Reporting:** Cálculo automático de duração de sessões com agregação por tarefas.
+* **Modular Architecture:** Separação clara entre camada de apresentação (CLI), lógica de negócio e persistência de dados.
 
-## 🚀 Funcionalidades
-✅ Registrar horas trabalhadas em tarefas/projetos  
-✅ Listar registros existentes  
-✅ Atualizar ou excluir registros  
-✅ Armazenamento em **SQLite**, totalmente local e leve  
-✅ Estrutura modular, organizada e testável  
+## 🛠️ Tech Stack
+* **Language:** Python 3
+* **Database:** SQLite3 (Embedded)
+* **Libraries:** `argparse` (CLI parsing), `datetime`
 
----
+## ⚙️ Architecture
+O projeto segue uma arquitetura modular para facilitar manutenção e testes:
 
-## 🗂 Estrutura do Projeto
+* `cli.py`: Ponto de entrada, gerencia argumentos e comandos do usuário.
+* `models.py`: Camada de abstração de dados e regras de negócio.
+* `db.py`: Gerenciamento de conexões e inicialização de schemas do SQLite.
+* `schema.sql`: Definição DDL da estrutura do banco de dados.
 
+## 📦 Installation
+
+1.  **Clone o repositório:**
+    ```bash
+    git clone [https://github.com/BeiruthDEV/hour-tracker-cli.git](https://github.com/BeiruthDEV/hour-tracker-cli.git)
+    cd hour-tracker-cli
+    ```
+
+2.  **Prepare o ambiente:**
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # Windows: venv\Scripts\activate
+    pip install -r requirements.txt
+    ```
+
+## 💻 Usage
+
+A ferramenta expõe comandos intuitivos para o fluxo de trabalho diário:
+
+### 1. Iniciar uma Sessão
+Começa a contagem de tempo para uma tarefa específica.
 ```bash
-Projeto-Pessoal-Hour-Tracker-Python-SQLite/
-│
-├── tracker/                # Código-fonte principal
-│   ├── __init__.py
-│   ├── core.py
-│   ├── storage.py
-│   ├── cli.py
-│   ├── db.py
-│   ├── models.py
-│   └── schema.sql
-│
-├── tests/                  # Testes automatizados
-│   └── test_tracker.py
-│
-├── README.md               # Documentação principal
-├── pyproject.toml          # Configuração do projeto
-├── .gitignore              # Ignorar DB, cache, etc.
+python -m tracker.cli start --task "Refatoração API"
+# Output: ✅ Sessão iniciada para tarefa: Refatoração API
 ```
 
-
----
-
-## 🚀 Na prática, para que ele serve?
-
-- Acompanhar **quanto tempo você gastou em cada projeto** ou tarefa.  
-- Manter um **histórico confiável** de sessões, salvo em banco de dados.  
-- Melhorar sua **produtividade pessoal** e ter clareza sobre onde seu tempo está sendo usado.  
-- Ser usado por **freelancers** para medir horas de trabalho e facilitar **cobranças a clientes**.  
-- Auxiliar em **estudos ou projetos pessoais**, ajudando a gerenciar o tempo investido.
-
----
-
-## 📦 Instalação
-
-Clone o repositório e crie um ambiente virtual:
-
-```bash
-git clone https://github.com/seu-usuario/Projeto-Pessoal-Hour-Tracker-Python-SQLite.git
-
-cd Projeto-Pessoal-Hour-Tracker-Python-SQLite
-python -m venv venv
-source venv/bin/activate   # Linux/Mac
-.\venv\Scripts\activate      # Windows/VS Code
-pip install -e .
-python -m tracker.cli add --task "Projeto X" --hours 5
-python -m tracker.cli list
-
-
-```
-
-⚡ Uso
-1. Iniciar um projeto
+### 2. Finalizar Sessão
+Encerra a tarefa atual e salva o timestamp final.
 
 ```bash
 
-python -m tracker.cli start --task "Nome da Tarefa"
-
-```
-
-📌 Marca a hora de início no banco de dados.
-
-2. Parar um projeto
-```bash
 python -m tracker.cli stop
+# Output: 🛑 Sessão encerrada com sucesso.
 ```
 
-📌 Registra a hora de fim e calcula quanto tempo foi gasto.
+### 3. Gerar Relatório
+Exibe o histórico de trabalho e duração calculada.
 
-3. Gerar relatório
 ```bash
+
 python -m tracker.cli report
+Exemplo de Saída:
+
+Plaintext
 ```
 
-Saída esperada:
-```bash
-Horas acumuladas por projeto:
- - Projeto X: 2.00h
- - Projeto Y: 3.50h
-```
+### 📊 Relatório de Sessões
 
-📊 Exemplo prático
+ID: 1 | Tarefa: Refatoração API | Início: 2023-10-27 10:00:00 | Fim: 2023-10-27 12:30:00 | Horas: 2.50
+ID: 2 | Tarefa: Deploy AWS      | Início: 2023-10-27 14:00:00 | Fim: 2023-10-27 15:00:00 | Horas: 1.00
+🔮 Future Improvements
+[ ] Exportação de relatórios para CSV/JSON.
 
-Você começa a estudar Python:
-```bash
-python cli.py start "Estudos Python"
-```
+[ ] Suporte a múltiplas sessões simultâneas.
 
-Depois de 1h30, você para:
-```bash
-python cli.py stop "Estudos Python"
-```
+[ ] Visualização gráfica de produtividade no terminal (ASCII charts).
 
-E gera o relatório:
-```bash
-Horas acumuladas por projeto:
- - Estudos Python: 1.50h
-```
-
-👉 Assim, você acompanha na prática quanto tempo foi investido.
-
-📦 Banco de Dados
-
-O banco de dados é criado automaticamente em SQLite.
-
-O arquivo schema.sql contém a estrutura das tabelas.
-
-O banco (hourtracker.db) é local e ignorado pelo Git (não versionado).
-
-
-
-📜 Licença
-
-Este é um projeto pessoal, feito apenas para estudos e prática em Python.
-Não possui vínculo comercial nem garantia de suporte.
-
-✍️ Autor
-
-Feito com dedicação por Matheus Beiruth Miranda dos Santos  🖊️
+Desenvolvido por Matheus Beiruth.
